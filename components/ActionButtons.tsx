@@ -22,9 +22,9 @@ export function ActionButtons({ slug, hostname, score }: { slug: string; hostnam
   const copy = async () => { try { await navigator.clipboard.writeText(`${window.location.origin}/r/${slug}`); setMessage('Result link copied.'); } catch { setMessage('Copy the page address to share this result.'); } };
   return <>
     <div className={styles.buttonGroup}>
-      <button className={`${styles.button} ${styles.primary}`} onClick={() => dialog.current?.showModal()}><span aria-hidden="true">↥</span> Share the damage</button>
-      <Link className={`${styles.button} ${styles.secondary}`} href={`/challenge/${slug}`}><span aria-hidden="true">♜</span> Challenge a website</Link>
-      <Link className={`${styles.button} ${styles.secondary}`} href="/"><span aria-hidden="true">↻</span> Roast another</Link>
+      <button className={`${styles.button} ${styles.primary}`} onClick={() => dialog.current?.showModal()}><span className={styles.icon} aria-hidden="true">↥</span>Share the damage</button>
+      <Link className={`${styles.button} ${styles.secondary}`} href={`/challenge/${slug}`}><span className={styles.icon} aria-hidden="true">♜</span>Challenge a website</Link>
+      <Link className={`${styles.button} ${styles.secondary}`} href="/"><span className={styles.icon} aria-hidden="true">↻</span>Roast another</Link>
     </div>
     <dialog ref={dialog} className={styles.shareDialog} aria-label="Share your score card">
       <div className={styles.dialogHeader}><h2>Share the damage.</h2><button className={styles.button} onClick={() => dialog.current?.close()} aria-label="Close share dialog">✕</button></div>

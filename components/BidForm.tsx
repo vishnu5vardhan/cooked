@@ -50,12 +50,9 @@ export default function BidForm({initialRank, embedded = false}: {initialRank: n
       await loadRazorpay();
       const checkout = new window.Razorpay!({
         key: data.keyId, amount: data.amount, currency: data.currency, name: 'Cooked.', description: 'Seven-day heat position', order_id: data.orderId,
-        handler: async (payment) => {
-          try {
-          const verification = await fetch('/api/payments/razorpay/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ orderId: data.orderId, paymentId: payment.razorpay_payment_id, signature: payment.razorpay_signature }) });
-          if (!verification.ok) { setError('We could not verify that payment. Please contact support.'); return; }
+        handler: () => {
+          // Razorpay's webhook is the activation authority; do not make the confirmation page depend on another browser request.
           router.push(`/bid/success?bid=${encodeURIComponent(data.bidId)}`);
-          } catch { setError('Your payment is being confirmed. Please do not pay again.'); } finally { setBusy(false); }
         },
         modal: { ondismiss: () => { setBusy(false); setError('Checkout closed. No new payment was submitted here.'); } },
       });
@@ -68,13 +65,13 @@ export default function BidForm({initialRank, embedded = false}: {initialRank: n
     <form onSubmit={checkout} className={styles.form}>
       {!embedded && <label>Target rank<select value={rank} onChange={(event) => { setRank(Number(event.target.value)); setQuote(null); }}>{Array.from({ length: 8 }, (_, index) => <option key={index + 1} value={index + 1}>Rank #{index + 1}</option>)}</select></label>}
       <label>Brand name<input required maxLength={20} value={form.name} onChange={(event) => change('name', event.target.value)} /></label>
-      <label>Website URL<input type="url" required placeholder="https://brand.com" value={form.destinationUrl} onChange={(event) => change('destinationUrl', event.target.value)} /></label>
-      <label>Contact email<input type="email" required value={form.contactEmail} onChange={(event) => change('contactEmail', event.target.value)} /></label>
+      <label>Website URL<input type="text" inputMode="url" autoCapitalize="none" autoCorrect="off" required placeholder="https://brand.com" value={form.destinationUrl} onChange={(event) => change('destinationUrl', event.target.value)} /></label>
+      <label>Contact email <span>(optional)</span><input type="email" value={form.contactEmail} onChange={(event) => change('contactEmail', event.target.value)} /></label>
       <label>Square logo · PNG, JPEG or WebP<input type="file" accept="image/png,image/jpeg,image/webp" onChange={async event => {
         const file = event.target.files?.[0]; if (!file) return;
         if (file.size > 250_000 || !['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) { setError('Use a PNG, JPEG or WebP under 250 KB.'); return; }
         const source = URL.createObjectURL(file); const image = new Image();
-        image.onload = () => { URL.revokeObjectURL(source); if (image.naturalWidth !== image.naturalHeight) { setError('Use a square logo.'); return; } const reader = new FileReader(); reader.onload = () => change('logo', String(reader.result)); reader.readAsDataURL(file); }; image.onerror = () => { URL.revokeObjectURL(source); setError('That logo could not be read.'); }; image.src = source;
+        image.onload = () => { URL.revokeObjectURL(source); const reader = new FileReader(); reader.onload = () => change('logo', String(reader.result)); reader.readAsDataURL(file); }; image.onerror = () => { URL.revokeObjectURL(source); setError('That logo could not be read.'); }; image.src = source;
       }} /></label>
       <label>Short tagline <span>(optional)</span><input maxLength={48} value={form.tagline} onChange={(event) => change('tagline', event.target.value)} /></label>
       <p className={styles.copy} style={{gridColumn: "1 / -1"}}>Paid positions rank by active seven-day spend. Being outranked does not qualify for a refund. Rejected or undeliverable placements are refunded.</p>
