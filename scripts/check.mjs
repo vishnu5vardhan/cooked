@@ -31,6 +31,8 @@ try {
    const roastEngine = await readFile(new URL('../lib/roast-engine.ts', import.meta.url), 'utf8');
    assert.match(roastEngine, /\{ packet, draft: writer, feedback: evaluation\.feedback \}/);
    assert.match(roastEngine, /obsolete fixed-width\/table-era layouts/);
+   const sponsorEngine = await readFile(new URL('../lib/sponsor-engine.ts', import.meta.url), 'utf8');
+   assert.match(sponsorEngine, /contact_email: input\.contactEmail\?\.trim\(\) \|\| ''/);
   const {sponsorPositionFloor} = await load('sponsor-engine');
   assert.deepEqual(Array.from({length:8},(_,index)=>sponsorPositionFloor(index+1)),[45,40,35,30,25,20,15,10]);
   const {rankWebsiteAnalyses} = await load('analysis-store');
