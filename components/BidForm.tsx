@@ -7,7 +7,8 @@ import styles from '@/app/bid/page.module.css';
 type Quote = { isEligible: boolean; minimumRequired: number; currentRankSpend: number; currentEligibleSpend: number; projectedRank: number; earliestExpiry: string; quoteExpiresAt: string; message: string };
 type RazorpayResponse = { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string };
 type RazorpayOptions = { key: string; amount: number; currency: string; name: string; description: string; order_id: string; handler: (response: RazorpayResponse) => void | Promise<void>; modal?: { ondismiss: () => void } };
-declare global { interface Window { Razorpay?: new (options: RazorpayOptions) => { open: () => void } } }
+type RazorpayCheckout = { open: () => void; on: (event: 'payment.failed', handler: (response: { error?: { description?: string } }) => void) => void };
+declare global { interface Window { Razorpay?: new (options: RazorpayOptions) => RazorpayCheckout } }
 
 function loadRazorpay(): Promise<void> {
   if (window.Razorpay) return Promise.resolve();
@@ -58,6 +59,7 @@ export default function BidForm({initialRank, embedded = false}: {initialRank: n
         },
         modal: { ondismiss: () => { setBusy(false); setError('Checkout closed. No new payment was submitted here.'); } },
       });
+      checkout.on('payment.failed', (failure) => { setBusy(false); setError(failure.error?.description || 'Payment failed. No position was activated.'); });
       checkout.open(); opened = true;
     } catch (caught) { setError(caught instanceof Error ? caught.message : 'Could not start Razorpay.'); } finally { if (!opened) setBusy(false); }
   };

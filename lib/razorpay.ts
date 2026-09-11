@@ -8,6 +8,7 @@ export async function createRazorpayOrder(input: { amount: number; bidId: string
   const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
   const keySecret = process.env.RAZORPAY_KEY_SECRET;
   if (!keyId || !keySecret) throw new Error('Razorpay is not configured yet.');
+  if (!Number.isSafeInteger(input.amount) || input.amount < 1) throw new Error('Razorpay orders must be at least 100 currency subunits.');
   if ((process.env.RAZORPAY_CURRENCY || 'USD') !== 'USD') throw new Error('Sponsor prices are in USD. Enable USD payments before checkout.');
   const response = await fetch('https://api.razorpay.com/v1/orders', {
     method: 'POST',

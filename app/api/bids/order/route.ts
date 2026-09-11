@@ -21,6 +21,7 @@ export async function POST(request: Request) {
     await attachRazorpayOrder(bid.id, order.id);
     return NextResponse.json({ success: true, bidId: bid.id, orderId: order.id, amount: order.amount, currency: order.currency, keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, brandName: brand.name });
   } catch (error: unknown) {
-    return NextResponse.json({ success: false, error: 'order_error', message: error instanceof Error ? error.message : 'Could not create a payment order.' }, { status: 500 });
+    const message = error instanceof Error ? error.message : 'Could not create a payment order.';
+    return NextResponse.json({ success: false, error: 'order_error', message }, { status: message.includes('(401)') ? 401 : 500 });
   }
 }
