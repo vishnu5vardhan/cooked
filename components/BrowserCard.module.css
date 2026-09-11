@@ -1,0 +1,97 @@
+.browserCard {
+  width: 100%;
+  max-width: 320px;
+  height: 200px;
+  background-color: var(--oven-raised);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chrome {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--canvas);
+}
+
+.dots {
+  display: flex;
+  gap: 6px;
+  margin-right: 12px;
+}
+
+.dotRed, .dotYellow, .dotGreen {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dotRed { background-color: #FF5F56; }
+.dotYellow { background-color: #FFBD2E; }
+.dotGreen { background-color: #27C93F; }
+
+.urlBar {
+  flex: 1;
+  background-color: var(--oven-raised);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-family: var(--font-geist-mono);
+  font-size: 10px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.spacer {
+  width: 42px;
+}
+
+.content {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.headerBlock {
+  height: 24px;
+  width: 100%;
+  background-color: var(--border);
+  border-radius: 4px;
+}
+
+.navBlock {
+  height: 8px;
+  width: 60%;
+  background-color: var(--border);
+  border-radius: 4px;
+}
+
+.textBlock1 {
+  height: 8px;
+  width: 90%;
+  background-color: var(--border);
+  border-radius: 4px;
+}
+
+.textBlock2 {
+  height: 8px;
+  width: 75%;
+  background-color: var(--border);
+  border-radius: 4px;
+}
+
+.textBlock3 {
+  height: 8px;
+  width: 40%;
+  background-color: var(--border);
+  border-radius: 4px;
+}

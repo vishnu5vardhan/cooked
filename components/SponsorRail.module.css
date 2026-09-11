@@ -1,0 +1,122 @@
+.railContainer {
+  margin-top: 64px;
+  padding: 32px 0;
+  border-top: 1px solid var(--border);
+}
+
+.label {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.scrollWrapper {
+  overflow-x: auto;
+  padding-bottom: 16px;
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollWrapper::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.sponsorList {
+  display: flex;
+  gap: 16px;
+  min-width: max-content;
+  padding: 0 16px;
+}
+
+.sponsorCell {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background-color: var(--oven-raised);
+  width: 200px;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
+  text-decoration: none;
+}
+
+.sponsorCell:hover {
+  border-color: var(--text-secondary);
+}
+
+.sponsorCell:active {
+  transform: scale(0.97);
+}
+
+.rankInfo {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 12px;
+}
+
+.rank {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.spend {
+  color: var(--text-secondary);
+}
+
+.brandInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logoContainer { width: 32px; height: 32px; flex-shrink: 0; }
+.logoContainer svg { width: 100%; height: 100%; }
+
+.logo, .logoFallback {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.logoFallback {
+  background-color: var(--border);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-geist-sans), sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.name {
+  font-family: var(--font-geist-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tagline {
+  font-family: var(--font-geist-sans), sans-serif;
+  font-size: 11px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

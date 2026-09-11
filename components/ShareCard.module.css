@@ -1,0 +1,200 @@
+.cardContainer {
+  width: 100%;
+  max-width: 800px; /* Scaled down for UI presentation */
+  margin: 0 auto;
+}
+
+.aspectRatioWrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 52.5%; /* 630/1200 = 52.5% */
+  background-color: var(--canvas);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.cardContent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  padding: 48px;
+}
+
+.leftCol {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.brandMark {
+  font-family: var(--font-geist-sans), sans-serif;
+  font-weight: 900;
+  font-size: 24px;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.domain {
+  font-family: var(--font-geist-mono), monospace;
+  font-weight: 700;
+  font-size: 32px;
+  color: var(--text-primary);
+  margin-top: 24px;
+}
+
+.scoreText {
+  font-family: var(--font-geist-sans), sans-serif;
+  font-weight: 900;
+  font-size: 72px;
+  color: var(--text-primary);
+  line-height: 1;
+  margin: 16px 0;
+  letter-spacing: -0.02em;
+}
+
+.scoreValue {
+  color: var(--ember);
+}
+
+.bandContainer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.bandBadge {
+  font-family: var(--font-geist-mono), monospace;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-primary);
+  border: 1px solid var(--heat-amber, #FF8A45);
+  padding: 4px 12px;
+  text-transform: uppercase;
+}
+
+.bandDesc {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.archetype {
+  font-family: var(--font-geist-sans), sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.verdict {
+  font-family: var(--font-geist-sans), sans-serif;
+  font-size: 16px;
+  color: var(--text-secondary);
+  max-width: 90%;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.challengeCta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  font-family: var(--font-geist-mono), monospace;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.rightCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.scoreDialWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.scoreLabel {
+  font-family: var(--font-geist-mono), monospace;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sponsorPlate {
+  width: 100%;
+  max-width: 200px;
+  border: 1px solid var(--border);
+  background-color: var(--oven-raised);
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.rankInfo {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 12px;
+}
+
+.rank {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.spend {
+  color: var(--text-secondary);
+}
+
+.sponsorBrand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo, .logoFallback {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+}
+
+.logoFallback {
+  background-color: var(--border);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-geist-sans), sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.sponsorName {
+  font-family: var(--font-geist-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

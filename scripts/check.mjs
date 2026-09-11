@@ -1,0 +1,44 @@
+import assert from 'node:assert/strict';
+import {mkdtemp, readFile, readdir, writeFile, rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {createHmac} from 'node:crypto';
+import ts from 'typescript';
+const dir = await mkdtemp(join(tmpdir(),'cooked-check-'));
+try {
+  for (const name of await readdir(new URL('../lib/', import.meta.url))) {
+    if (!name.endsWith('.ts')) continue;
+    const source = await readFile(new URL('../lib/'+name, import.meta.url),'utf8');
+    const compiled = ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/from '(\.\/[^']+)'/g,"from '$1.mjs'");
+    await writeFile(join(dir,name.replace('.ts','.mjs')),compiled);
+  }
+  const load = name => import(pathToFileURL(join(dir,name+'.mjs')));
+  const {validateAndNormalizeUrl} = await load('url-validation');
+  const homepageCss = await readFile(new URL('../app/page.module.css', import.meta.url), 'utf8');
+  assert.match(homepageCss, /\.main\s*{[^}]*display:\s*flex/s);
+  assert.match(homepageCss, /\.container\s*{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*minmax\(300px, 30%\) minmax\(0, 1fr\)/s);
+  for(const url of ['http://127.0.0.1','http://192.168.0.1','https://user:pass@example.com','https://example.com:22']) assert.equal(validateAndNormalizeUrl(url).isValid,false,url);
+  assert.equal(validateAndNormalizeUrl('example.com/path?utm_source=a#x').normalizedUrl,'https://example.com');
+  const {calculateTotalScore} = await load('roast-engine');
+  assert.equal(calculateTotalScore(81,64,68),72);
+  const {sponsorPositionFloor} = await load('sponsor-engine');
+  assert.deepEqual(Array.from({length:8},(_,index)=>sponsorPositionFloor(index+1)),[45,40,35,30,25,20,15,10]);
+  const {rankWebsiteAnalyses} = await load('analysis-store');
+  const now = Date.now();
+  const row = (host,score,age=1,status='published',slug=host) => ({hostname:host,totalScore:score,completedAt:new Date(now-age).toISOString(),status,slug});
+  const rows=[row('a',90,100,'published','old-a'),row('a',20),row('b',70),row('hidden',100,1,'hidden'),row('expired',99,86_400_000),row('future',100,-100)];
+  assert.deepEqual(rankWebsiteAnalyses(rows,'most',now).map(x=>x.hostname),['b','a']);
+  assert.deepEqual(rankWebsiteAnalyses(rows,'least',now).map(x=>x.hostname),['a','b']);
+  const {verifyRazorpayPayment,verifyRazorpayWebhook} = await load('razorpay');
+  process.env.RAZORPAY_KEY_SECRET='test-secret'; process.env.RAZORPAY_WEBHOOK_SECRET='test-webhook';
+  assert(verifyRazorpayPayment('order','payment',createHmac('sha256','test-secret').update('order|payment').digest('hex')));
+  assert.equal(verifyRazorpayPayment('order','payment','é'.repeat(64)),false);
+  assert.equal(verifyRazorpayWebhook('{}','0'.repeat(64)),false);
+  const {structuredResponse} = await load('openai'); const realFetch=globalThis.fetch;
+  process.env.OPENAI_API_KEY='test';
+  globalThis.fetch=async()=>Response.json({output:[{content:[{type:'output_text',text:'{"ok":true}'}]}]});
+  assert.deepEqual(await structuredResponse('test','test',{},{}),{ok:true});
+  globalThis.fetch=realFetch;
+  console.log('PASS: URL safety, weighted scores, exact 24-hour latest-per-site rankings, payment signatures, Responses parsing.');
+} finally { await rm(dir,{recursive:true,force:true}); }

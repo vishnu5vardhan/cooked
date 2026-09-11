@@ -1,0 +1,53 @@
+.buttonGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-family: var(--font-geist-sans), sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease-out), filter 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
+}
+
+.button:active {
+  transform: scale(0.97);
+}
+
+.icon {
+  margin-right: 8px;
+}
+
+.primary {
+  background-color: var(--ember);
+  color: #000;
+  border: none;
+}
+
+.primary:hover {
+  filter: brightness(1.1);
+}
+
+.secondary {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.secondary:hover {
+  border-color: var(--text-secondary);
+}
+.shareDialog { margin: auto; width: min(700px, calc(100vw - 32px)); max-height: 90vh; overflow: auto; border: 1px solid var(--border); border-radius: 10px; padding: 20px; color: var(--text-primary); background: var(--canvas); }
+.shareDialog::backdrop { background: rgba(0,0,0,.8); }
+.dialogHeader { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+.dialogHeader h2 { font-size: 24px; }
+.shareDialog img { width: 100%; height: auto; }
+.shareDialog p { font-size: 13px; color: var(--text-secondary); margin-top: 16px; }

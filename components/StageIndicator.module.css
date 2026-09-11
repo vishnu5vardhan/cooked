@@ -1,0 +1,115 @@
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  position: relative;
+}
+
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 28px;
+  flex-shrink: 0;
+}
+
+.iconNode {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.circleComplete {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--ember);
+  background-color: rgba(255, 85, 46, 0.15);
+  color: var(--ember);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circleComplete svg {
+  width: 14px;
+  height: 14px;
+}
+
+.circleActive {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--ember);
+  border-right-color: transparent;
+  animation: spinNode 1s linear infinite;
+  box-shadow: 0 0 10px rgba(255, 85, 46, 0.4);
+}
+
+.circlePending {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #3A4247;
+  background-color: transparent;
+}
+
+.line {
+  width: 2px;
+  flex: 1;
+  min-height: 28px;
+  background-color: #2D3439;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.lineActive {
+  background-color: var(--ember);
+  box-shadow: 0 0 6px rgba(255, 85, 46, 0.4);
+}
+
+.rightCol {
+  display: flex;
+  flex-direction: column;
+  padding-top: 3px;
+  padding-bottom: 16px;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.subLabel {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Status state overrides */
+.pending .label {
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+.complete .label {
+  color: var(--text-primary);
+}
+
+.active .label {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+@keyframes spinNode {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+

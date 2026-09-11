@@ -1,0 +1,54 @@
+.container {
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.wave {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 200%;
+  height: 50%;
+  fill: none;
+  stroke: var(--ember);
+  stroke-width: 2px;
+}
+
+.wave1 {
+  opacity: 0.15;
+  animation: moveLeft 8s linear infinite;
+}
+
+.wave2 {
+  opacity: 0.10;
+  animation: moveRight 12s linear infinite;
+}
+
+.wave3 {
+  opacity: 0.07;
+  animation: moveLeft 10s linear infinite;
+  animation-delay: -5s;
+}
+
+@keyframes moveLeft {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes moveRight {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave1, .wave2, .wave3 {
+    animation: none;
+    transform: translateX(-25%);
+  }
+}

@@ -1,0 +1,66 @@
+.dialContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.large {
+  width: 240px;
+  height: 240px;
+}
+
+.small {
+  width: 120px;
+  height: 120px;
+}
+
+.svg {
+  transform: rotate(-90deg);
+}
+
+.arc {
+  transition: stroke-dashoffset 1.2s var(--ease-out);
+}
+@media (prefers-reduced-motion: reduce) { .arc { transition: none; } }
+
+.scoreTextContainer {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.large .score {
+  font-family: var(--font-geist-sans), sans-serif;
+  font-weight: 900;
+  font-size: 72px;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.small .score {
+  font-family: var(--font-geist-sans), sans-serif;
+  font-weight: 900;
+  font-size: 32px;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.maxScore {
+  font-family: var(--font-geist-mono), monospace;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.large .maxScore {
+  font-size: 20px;
+  margin-top: 4px;
+}
+
+.small .maxScore {
+  font-size: 12px;
+  margin-top: 2px;
+}
