@@ -122,6 +122,8 @@
   max-width: 90%;
 }
 
+.earnedStatus { margin-top: 18px; padding: 11px 13px; color: var(--success); border: 1px solid color-mix(in srgb, var(--success) 55%, transparent); font: 12px/1.45 var(--font-mono); letter-spacing: .04em; }
+
 .actionsWrapper {
   margin-top: auto;
 }
