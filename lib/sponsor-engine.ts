@@ -1,5 +1,6 @@
 import { createHash, createHmac, randomUUID } from 'node:crypto';
 import { Brand, PublicBrand } from './types';
+import { MOCK_BRANDS } from './mock-data';
 import { capturePublicPage } from './page-capture';
 import { structuredResponse } from './openai';
 
@@ -15,9 +16,16 @@ export function sponsorPositionFloor(rank: number): number {
   return 10 + (8 - rank) * 5;
 }
 
-// Local development starts with vacant positions; never represent seed spend as paid bids.
-const localBrands = new Map<string, Brand>();
-const localContributions: Contribution[] = [];
+// Local development seeds the mock board; never represent those starter rows as paid bids.
+const localBrands = new Map<string, Brand>(MOCK_BRANDS.map((brand) => [brand.id, brand]));
+const localContributions: Contribution[] = MOCK_BRANDS.map((brand) => ({
+  brandId: brand.id,
+  amount: brand.eligibleSpend,
+  activeFrom: Date.parse(brand.createdAt),
+  activeUntil: Date.parse(brand.earliestExpiry) || Date.now() + 7 * 86_400_000,
+  orderId: `seed-${brand.id}`,
+  eventId: `seed-${brand.id}`,
+}));
 const localBids = new Map<string, PendingBid>();
 
 const settings = () => {
