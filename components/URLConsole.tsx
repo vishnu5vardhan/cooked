@@ -53,7 +53,7 @@ export default function URLConsole({ onSubmit, state, currentStage, subStage, er
           <label htmlFor="website-url" className={styles.srOnly}>Public website URL</label>
           <input
             id="website-url"
-            type="url"
+            type="text"
             inputMode="url"
             autoCapitalize="none"
             autoCorrect="off"

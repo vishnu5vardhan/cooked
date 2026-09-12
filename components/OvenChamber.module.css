@@ -164,7 +164,22 @@
   padding: 16px;
 }
 
+.flames {
+  position: absolute;
+  bottom: 14px;
+  width: 180px;
+  height: 72px;
+  z-index: 1;
+  transform-origin: bottom center;
+  animation: flames 1.1s ease-in-out infinite alternate;
+}
+
+.flameBack { fill: #ff552e; }
+.flameFront { fill: #ff8a45; }
+
 .cardContainer {
+  position: relative;
+  z-index: 2;
   width: 80%;
   max-width: 280px;
   transform: translateY(0);
@@ -177,9 +192,10 @@
 }
 
 @keyframes cardEnter { from { opacity: 0; transform: translateY(48px) scale(.94); } to { opacity: 1; transform: none; } }
+@keyframes flames { from { transform: scaleY(.88) scaleX(.96); } to { transform: scaleY(1.05) scaleX(1.03); } }
 .doorClosing::after, .doorOpening::after { content: ''; position: absolute; inset: 0; z-index: 8; pointer-events: none; background: #151a1d; border: 1px solid var(--border); transform-origin: top; }
 .doorClosing::after { animation: doorClose 1.4s var(--ease-in-out) forwards; }
 .doorOpening::after { animation: doorOpen .8s var(--ease-out) forwards; }
 @keyframes doorClose { 0% { transform: scaleY(0); opacity: 0; } 45% { transform: scaleY(1); opacity: .94; } 100% { transform: scaleY(1); opacity: 0; } }
 @keyframes doorOpen { from { transform: scaleY(1); opacity: .9; } to { transform: scaleY(0); opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .cardContainer { animation: none; } .activeGlow { animation: none; } .doorClosing::after, .doorOpening::after { animation: none; display: none; } }
+@media (prefers-reduced-motion: reduce) { .cardContainer, .flames { animation: none; } .activeGlow { animation: none; } .doorClosing::after, .doorOpening::after { animation: none; display: none; } }

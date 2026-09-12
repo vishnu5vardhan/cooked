@@ -34,11 +34,7 @@ export default function SponsorPlate({ brand, size, illuminated, onSelect }: Spo
       </div>
 
       <div className={styles.content}>
-        {brand.logoSvg && (
-          <div 
-            className={styles.logoContainer}
-            ><BrandLogo source={brand.logoSvg} name={brand.name} /></div>
-        )}
+        {brand.logoSvg ? <div className={styles.logoContainer}><BrandLogo source={brand.logoSvg} name={brand.name} /></div> : <div className={`${styles.logoContainer} ${styles.placeholderLogo}`}>YOUR<br />LOGO</div>}
         <div className={styles.name}>{brand.name}</div>
         <div className={styles.tagline}>{brand.tagline}</div>
       </div>

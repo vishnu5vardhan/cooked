@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Oven from '@/components/Oven';
 import { StageIndicator } from '@/components/StageIndicator';
-import { PublicBrand } from '@/lib/types';
+import { EarnedPlacement, PublicBrand } from '@/lib/types';
 import styles from '@/app/page.module.css';
 
 const STAGES = [
@@ -14,7 +14,7 @@ const STAGES = [
   { id: 'cook', label: 'Cooking your website', subLabel: 'Verifying every claim…' },
 ];
 
-export default function HomeExperience({ challenge, initialBrands }: { challenge?: {slug: string; hostname: string; totalScore: number}; initialBrands: PublicBrand[] }) {
+export default function HomeExperience({ challenge, initialBrands, earnedPlacement: initialEarnedPlacement }: { challenge?: {slug: string; hostname: string; totalScore: number}; initialBrands: PublicBrand[]; earnedPlacement: EarnedPlacement | null }) {
   const router = useRouter();
   const [ovenState, setOvenState] = useState<'idle' | 'cooking' | 'complete'>('idle');
   const [submittedUrl, setSubmittedUrl] = useState('');
@@ -22,12 +22,13 @@ export default function HomeExperience({ challenge, initialBrands }: { challenge
   const [activeStageIdx, setActiveStageIdx] = useState(0);
   const [illuminatedSponsors, setIlluminatedSponsors] = useState<number[]>([]);
   const [brands, setBrands] = useState<PublicBrand[]>(initialBrands);
+  const [earnedPlacement, setEarnedPlacement] = useState<EarnedPlacement | null>(initialEarnedPlacement);
   const [error, setError] = useState('');
   const [slow, setSlow] = useState(false);
   const [cached, setCached] = useState(false);
 
   useEffect(() => {
-    const refresh = () => { if (!document.hidden) fetch('/api/leaderboards/sponsors').then((response) => response.json()).then((data) => setBrands(data.brands ?? [])).catch(() => undefined); };
+    const refresh = () => { if (!document.hidden) fetch('/api/leaderboards/sponsors').then((response) => response.json()).then((data) => { setBrands(data.brands ?? []); setEarnedPlacement(data.earnedPlacement ?? null); }).catch(() => undefined); };
     const timer = window.setInterval(refresh, 30_000); document.addEventListener('visibilitychange', refresh);
     return () => { clearInterval(timer); document.removeEventListener('visibilitychange', refresh); };
   }, []);
@@ -84,6 +85,7 @@ export default function HomeExperience({ challenge, initialBrands }: { challenge
           <h1 className={styles.headline}>{challenge ? `Can your site beat ${challenge.totalScore}?` : "How cooked is your website?"}</h1>
           <p className={styles.subhead}>{challenge && <><strong>{challenge.hostname}</strong> scored {challenge.totalScore}/100. Lower wins. Enter a different site below.<br /><br /></>}Drop the URL. We&apos;ll inspect the evidence, score the damage, and roast what&apos;s actually there.</p>
           <a className={styles.scrollCue} href="/leaderboard">Explore the latest roasts →</a>
+          {earnedPlacement ? <a className={styles.earnedPlate} href={earnedPlacement.destinationUrl} target="_blank" rel="noreferrer"><span>THIS WEEK&apos;S EARNED PLATE</span><strong>{earnedPlacement.hostname}</strong><small>{earnedPlacement.totalScore}/100 · Verified score · Ends {new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' }).format(new Date(earnedPlacement.expiresAt))}</small></a> : <p className={styles.earnedHint}>Score 20 or below with a verified homepage to earn a free plate for 7 days.</p>}
         </div>
         {ovenState === 'cooking' && <div className={styles.timelineContainer}>{STAGES.map((stage, index) => <StageIndicator key={stage.id} label={stage.label} status={activeStageIdx > index ? 'complete' : activeStageIdx === index ? 'active' : 'pending'} subLabel={activeStageIdx === index ? stage.subLabel : undefined} isLast={index === STAGES.length - 1} />)}</div>}
       </div>

@@ -1,4 +1,4 @@
-import { Analysis, Diagnosis, LeaderboardEntry } from './types';
+import { Analysis, Diagnosis, EarnedPlacement, LeaderboardEntry } from './types';
 
 type JsonRow = Record<string, unknown>;
 
@@ -136,6 +136,32 @@ export async function persistAnalysis(origin: string, analysis: Analysis): Promi
     }),
   });
   return analysis;
+}
+
+export async function claimEarnedPlacement(analysis: Analysis): Promise<boolean> {
+  if (analysis.totalScore > 20 || analysis.captureMode !== 'full') return false;
+  const rows = await rest('rpc/claim_cooked_earned_placement', {
+    method: 'POST',
+    body: JSON.stringify({ p_analysis: analysis.id }),
+  });
+  return (rows[0] as unknown) === true;
+}
+
+export async function loadEarnedPlacement(): Promise<EarnedPlacement | null> {
+  const rows = await rest('rpc/cooked_earned_placement', { method: 'POST', body: '{}' });
+  const row = rows[0];
+  if (!row) return null;
+  const destinationUrl = asText(row.destination_url);
+  const slug = asText(row.slug);
+  if (!destinationUrl || !slug) return null;
+  return {
+    analysisId: asText(row.analysis_id),
+    slug,
+    hostname: asText(row.hostname),
+    destinationUrl,
+    totalScore: asNumber(row.total_score),
+    expiresAt: asText(row.expires_at),
+  };
 }
 
 export async function loadAnalysisBySlug(slug: string): Promise<Analysis | null> {

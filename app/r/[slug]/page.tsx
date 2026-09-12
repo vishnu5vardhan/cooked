@@ -2,6 +2,7 @@ import { BrowserCard } from '@/components/BrowserCard';
 import { BrandLogo } from '@/components/BrandLogo';
 import { notFound } from 'next/navigation';
 import { getAnalysisBySlug } from '@/lib/roast-engine';
+import { getEarnedPlacement } from '@/lib/analysis-store';
 import { getRankedBrands } from '@/lib/sponsor-engine';
 import { getScoreBand, formatCurrencyFull } from '@/lib/utils';
 import { ScoreDial } from '@/components/ScoreDial';
@@ -22,7 +23,7 @@ export default async function ResultPage({ params, searchParams }: { params: Pro
   const {vs} = await searchParams;
   const opponent = vs && vs !== slug ? await getAnalysisBySlug(vs) : null;
   const band = getScoreBand(analysis.totalScore);
-  const sponsors = await getRankedBrands();
+  const [sponsors, earnedPlacement] = await Promise.all([getRankedBrands(), getEarnedPlacement()]);
   const topSponsor = sponsors[0];
   return <div className={styles.pageContainer}>
     <main className={styles.main}>
@@ -33,6 +34,7 @@ export default async function ResultPage({ params, searchParams }: { params: Pro
           <div className={styles.bandInfo}><div className={styles.bandBadge}>{band.name.toUpperCase()}</div><div className={styles.bandDesc}>{band.description}</div></div>
           <div className={styles.archetype}>{analysis.archetype}</div>
           <div className={styles.verdict}>{analysis.finalVerdict}</div>
+          {earnedPlacement?.analysisId === analysis.id && <div className={styles.earnedStatus}>EARNED PLATE ACTIVE · Free promotion for this verified homepage until {new Intl.DateTimeFormat(undefined, { month: 'long', day: 'numeric' }).format(new Date(earnedPlacement.expiresAt))}.</div>}
           <div className={styles.actionsWrapper}><ActionButtons slug={analysis.slug} hostname={analysis.hostname} score={analysis.totalScore} /></div>
         </div>
         <div className={styles.rightCol}>

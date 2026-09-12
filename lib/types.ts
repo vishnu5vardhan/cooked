@@ -102,3 +102,13 @@ export interface LeaderboardEntry {
   slug: string;
   completedAt: string;
 }
+
+/** A free, time-bound promotion earned by a genuinely strong public homepage. */
+export interface EarnedPlacement {
+  analysisId: string;
+  slug: string;
+  hostname: string;
+  destinationUrl: string;
+  totalScore: number;
+  expiresAt: string;
+}

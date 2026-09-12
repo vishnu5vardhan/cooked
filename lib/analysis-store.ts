@@ -1,11 +1,12 @@
 import { mkdir, readdir, readFile, writeFile, rename } from 'node:fs/promises';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
-import { Analysis, LeaderboardEntry } from './types';
-import { acceptRemovalRequest as acceptSupabaseRemoval, hasSupabaseStore, loadAnalysisBySlug, loadCachedAnalysis, loadLeaderboard, persistAnalysis, persistRemovalRequest } from './supabase-analysis-store';
+import { Analysis, EarnedPlacement, LeaderboardEntry } from './types';
+import { acceptRemovalRequest as acceptSupabaseRemoval, claimEarnedPlacement as claimSupabaseEarnedPlacement, hasSupabaseStore, loadAnalysisBySlug, loadCachedAnalysis, loadEarnedPlacement as loadSupabaseEarnedPlacement, loadLeaderboard, persistAnalysis, persistRemovalRequest } from './supabase-analysis-store';
 
 // ponytail: file storage is for one local development process; Supabase is required on Vercel.
 const directory = join(process.cwd(), '.cooked', 'analyses');
+let localEarnedPlacement: { analysisId: string; expiresAt: string } | null = null;
 async function localAnalyses(): Promise<Analysis[]> {
   await mkdir(directory, {recursive: true});
   const files = (await readdir(directory)).filter(name => name.endsWith('.json'));
@@ -20,13 +21,41 @@ export async function getCachedAnalysis(origin: string): Promise<Analysis | null
 }
 
 export async function saveAnalysis(origin: string, analysis: Analysis): Promise<Analysis> {
-  if (hasSupabaseStore()) return persistAnalysis(origin, analysis);
+  if (hasSupabaseStore()) {
+    const saved = await persistAnalysis(origin, analysis);
+    // An earned placement is optional promotion. Its failure must never block a valid roast.
+    await claimSupabaseEarnedPlacement(saved).catch(() => false);
+    return saved;
+  }
   assertLocal();
   await mkdir(directory, {recursive: true});
   const path = join(directory, `${analysis.slug}.json`);
   await writeFile(path + '.tmp', JSON.stringify({...analysis, siteId: origin}));
   await rename(path + '.tmp', path);
+  if (!localEarnedPlacement && analysis.totalScore <= 20 && analysis.captureMode === 'full') {
+    localEarnedPlacement = { analysisId: analysis.id, expiresAt: new Date(Date.now() + 7 * 86_400_000).toISOString() };
+  }
   return analysis;
+}
+
+export async function getEarnedPlacement(): Promise<EarnedPlacement | null> {
+  // Keep the existing product available while this additive migration rolls out.
+  if (hasSupabaseStore()) return loadSupabaseEarnedPlacement().catch(() => null);
+  assertLocal();
+  if (!localEarnedPlacement || Date.parse(localEarnedPlacement.expiresAt) <= Date.now()) {
+    localEarnedPlacement = null;
+    return null;
+  }
+  const analysis = (await localAnalyses()).find((candidate) => candidate.id === localEarnedPlacement?.analysisId && candidate.status === 'published');
+  if (!analysis) return null;
+  return {
+    analysisId: analysis.id,
+    slug: analysis.slug,
+    hostname: analysis.hostname,
+    destinationUrl: `https://${analysis.hostname}`,
+    totalScore: analysis.totalScore,
+    expiresAt: localEarnedPlacement.expiresAt,
+  };
 }
 
 export async function getAnalysisBySlug(slug: string): Promise<Analysis | null> {

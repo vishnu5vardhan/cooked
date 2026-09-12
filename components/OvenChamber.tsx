@@ -47,6 +47,10 @@ export default function OvenChamber({ state, url, screenshot, children }: OvenCh
           </div>
         ) : (
           <div className={styles.cookingContent}>
+            {isCooking && <svg className={styles.flames} viewBox="0 0 180 72" aria-hidden="true">
+              <path className={styles.flameBack} d="M22 70c-8-24 9-32 18-50 2 17 16 21 10 50M67 70c-7-31 14-38 22-62 4 21 18 28 12 62M119 70c-6-24 9-33 18-50 3 17 17 21 11 50" />
+              <path className={styles.flameFront} d="M31 70c-3-13 8-19 9-30 9 12 8 21 3 30M77 70c-4-17 9-26 11-39 12 16 9 28 4 39M129 70c-3-12 7-19 9-30 9 12 8 21 3 30" />
+            </svg>}
             <div className={styles.cardContainer}>
               <BrowserCard screenshot={screenshot} url={url || 'https://yourwebsite.com'} />
             </div>
